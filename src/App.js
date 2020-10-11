@@ -6,13 +6,12 @@ import Navbar from './components/Navbar/Navbar';
 import Loading from './components/Loading/Loading';
 
 import './App.css';
-import data from './config/defaults';
 
 const Chat = lazy(() => import('./components/Chat/Chat'));
 const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
 const Home = lazy(() => import('./components/Home/Home'));
 
-let ApiEndpoint = data.API_ENDPOINT;
+let ApiEndpoint = process.env.REACT_APP_API_ENDPOINT;
 
 function App() {
   let socket = io(ApiEndpoint);

@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import * as queryString from 'query-string';
 import {useHistory} from 'react-router-dom';
+import * as queryString from 'query-string';
 
 import './Home.css';
-import data from '../../config/defaults';
 
  const Home = () => {
-     const [splashscreen,setSplashscreen] = useState(true);    
+     const [splashscreen,setSplashscreen] = useState(true);  
+     let history = useHistory();
 
      useEffect(() => {
-         const urlParams = queryString.parse(window.location.search);
+         if (!localStorage.getItem('x-auth-token')) {
+            const urlParams = queryString.parse(window.location.search);
             if (urlParams.code) {
                 async function getAccessToken(code) {
-                    return await fetch(`${data.API_ENDPOINT}/get-token`,{
+                    return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/get-token`,{
                         method:'POST',
                         body:JSON.stringify({code}),
                         headers:{'Content-type':'application/json'}       
@@ -21,21 +22,22 @@ import data from '../../config/defaults';
                 const token = getAccessToken(urlParams.code)
                     .then(res=>res.json())
                     .then(result=>{
-                        if (result.token) {
-                            localStorage.setItem('x-auth-token',result.token);
+                        localStorage.setItem('x-auth-token',result.token);
+                        if (localStorage.getItem('x-auth-token')) {
                             history.push({pathname:'/dashboard'});
                         }
                     })
             }
-         
+         } else {
+            history.push({pathname:'/dashboard'});
+         }
      })
-     let history = useHistory();
 
      setTimeout(()=>{setSplashscreen(false)},5000);
      
      const googleAuth = () => {
 
-         fetch(`${data.API_ENDPOINT}/google-auth`,{
+         fetch(`${process.env.REACT_APP_API_ENDPOINT}/google-auth`,{
              method:'POST',
              headers:{'Content-type':'application/json'}
          })

@@ -4,10 +4,7 @@ import {Link,Route,Switch,useHistory} from 'react-router-dom';
 import './Dashboard.css';
 import Rooms from '../Rooms/Rooms';
 import User from '../user/User';
-import data from '../../config/defaults';
 import Loading from '../Loading/Loading';
-
-let token = data.token;
 
 const Dashboard = ({match}) => {
     //state
@@ -15,8 +12,10 @@ const Dashboard = ({match}) => {
     const [user,setUser] = useState(null);
 
     useEffect(() => {
-        if (token) {
-            fetch(`${data.API_ENDPOINT}/user`,{
+        let token = localStorage.getItem('x-auth-token');
+        !token ? history.push('/') 
+            :
+            fetch(`${process.env.REACT_APP_API_ENDPOINT}/user`,{
                 method:'GET',
                 headers:{
                     'Content-type':'application/json',
@@ -27,9 +26,6 @@ const Dashboard = ({match}) => {
                     .then(result => {
                         setUser(result.user);
                     })
-        }else{
-            history.push('/')
-        }
     }, [])
      
      return (

@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 import * as Yup from 'yup';
 
 import './Rooms.css';
-import  data  from '../../config/defaults';
 import Snackbar from '../Snackbar/Snackbar';
 
 //validation
@@ -12,7 +11,7 @@ const validationSchema = Yup.object().shape({
     password:Yup.string().required('Password field is required').min(6)
 });
 
-let token = data.token;
+let token = localStorage.getItem('x-auth-token');
 
 const Rooms = ({user,setUser}) => {
     const [snackbar,setSnackbar] = useState({display:false,message:''});
@@ -43,7 +42,8 @@ const Rooms = ({user,setUser}) => {
         //validate form
         validationSchema.validate(formData)
             .then(payload=>{
-                fetch(`${data.API_ENDPOINT}/room`, {
+                console.log(process.env.REACT_APP_API_ENDPOINT)
+                fetch(`${process.env.REACT_APP_API_ENDPOINT}/room`, {
                     method:'POST',
                     body:JSON.stringify(payload),
                     headers:{
@@ -75,7 +75,7 @@ const Rooms = ({user,setUser}) => {
             formData.name = user.rooms[index].name;
         }
         
-        fetch(`${data.API_ENDPOINT}/room/${user.rooms[index]._id}`, {
+        fetch(`${process.env.REACT_APP_API_ENDPOINT}/room/${user.rooms[index]._id}`, {
             method:'PUT',
             body:JSON.stringify(formData),
             headers:{'Content-type':'application/json','x-auth-token':token}
@@ -91,7 +91,7 @@ const Rooms = ({user,setUser}) => {
 
     //delete handler:delete a room 
     const handleDelete = (id) =>{
-        fetch(`${data.API_ENDPOINT}/room/${id}`, {
+        fetch(`${process.env.REACT_APP_API_ENDPOINT}/room/${id}`, {
             method:'DELETE',
             headers:{'Content-type':'application/json','x-auth-token':token}
         })
@@ -104,7 +104,7 @@ const Rooms = ({user,setUser}) => {
     //copy room url to clipboard
     const copyUrlToClipboard = (token) => {
         let href = document.getElementById(`chat-room-url${token}`).getAttribute('href');
-        href = encodeURI(`${data.CLIENT_ENDPOINT}${href}`);
+        href = encodeURI(`${process.env.REACT_APP_CLIENT_ENDPOINT}${href}`);
 
         document.getElementById('hiddenUrlInput').setAttribute('value',href);
         document.getElementById('hiddenUrlInput').select();

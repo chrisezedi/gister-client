@@ -3,7 +3,6 @@ import * as Yup from 'yup';
 
 import Input from '../Input/Input';
 import './Chat.css';
-import data from '../../config/defaults';
 
 const validationSchema = Yup.object().shape({
     name:Yup.string().required('Name field is required'),
@@ -21,12 +20,11 @@ const validationSchema = Yup.object().shape({
      const [message,setMessage] = useState('');
      const [messages,setMessages] = useState([]);
 
-    // let ApiEndpoint = data.API_ENDPOINT;
     let id = match.params.id;
 
     useEffect(() => {
         //load messages from room
-        fetch(`${data.API_ENDPOINT}/room/${id}`)
+        fetch(`${process.env.REACT_APP_API_ENDPOINT}/room/${id}`)
             .then(res => res.json())
             .then(result => {
                 setMessages(result.messages);
