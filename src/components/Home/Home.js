@@ -23,9 +23,7 @@ import './Home.css';
                     .then(res=>res.json())
                     .then(result=>{
                         localStorage.setItem('x-auth-token',result.token);
-                        if (localStorage.getItem('x-auth-token')) {
-                            history.push({pathname:'/dashboard'});
-                        }
+                        history.push({pathname:'/dashboard'});
                     })
             }
          } else {
@@ -38,8 +36,7 @@ import './Home.css';
      const googleAuth = () => {
 
          fetch(`${process.env.REACT_APP_API_ENDPOINT}/google-auth`,{
-             method:'POST',
-             headers:{'Content-type':'application/json'}
+             method:'POST'
          })
             .then(res => res.json())
             .then(result => {

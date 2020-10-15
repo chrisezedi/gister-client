@@ -15,10 +15,12 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "socket.io-client": "^2.3.0",
+    "react-scroll-to-bottom": "^1.3.2",
     "yup": "^0.29.3"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:dev":"http-server --proxy http://localhost:8080? -c-1",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

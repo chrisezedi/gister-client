@@ -3,7 +3,7 @@
 }
 
 .msgBox{
-    min-width:200px;
+    width:200px;
     border-radius: 10px 0px 10px 0px;
 }
 
@@ -15,14 +15,13 @@ header{
     height: 10%;
 }
 
-#chatarea{
-    height: 90%;
-    background-color: #FAFAFA;
-}
-
 #inputContainer{
     position:fixed;
     z-index: 3;
     top:90%;
     width: auto;
+}
+
+#inputWrapper{
+    margin-top: 70px;
 }

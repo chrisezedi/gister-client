@@ -42,7 +42,6 @@ const Rooms = ({user,setUser}) => {
         //validate form
         validationSchema.validate(formData)
             .then(payload=>{
-                console.log(process.env.REACT_APP_API_ENDPOINT)
                 fetch(`${process.env.REACT_APP_API_ENDPOINT}/room`, {
                     method:'POST',
                     body:JSON.stringify(payload),

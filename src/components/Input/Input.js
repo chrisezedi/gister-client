@@ -9,9 +9,6 @@ import './Input.css';
              <div className="row">
                  <div className="col-12">
                     <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                        </div>
-
                         <textarea
                             id="textarea"
                             className="form-control" 
@@ -23,9 +20,11 @@ import './Input.css';
                             onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
                         >
                         </textarea>
-                        <button className="btn btn-success ml-1" onClick={ e => sendMessage(e)} >
+                        <div className="input-group-append">
+                        <button className="btn btn-danger ml-1" onClick={ e => sendMessage(e)} >
                             SEND
                         </button>
+                        </div>
                     </div>
                  </div>
              </div>

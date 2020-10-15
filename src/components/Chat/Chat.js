@@ -3,6 +3,8 @@ import * as Yup from 'yup';
 
 import Input from '../Input/Input';
 import './Chat.css';
+import toneUrlMp3 from './tones/juntos-607.mp3';
+import toneUrlOgg from './tones/juntos-607.ogg';
 
 const validationSchema = Yup.object().shape({
     name:Yup.string().required('Name field is required'),
@@ -10,7 +12,7 @@ const validationSchema = Yup.object().shape({
  });
 
  const Chat = ({match,socket}) => {
-
+     
     const LoggedIn = () => {
         return sessionStorage.getItem('name') && sessionStorage.getItem('password') ?  true : false;
    }
@@ -22,13 +24,26 @@ const validationSchema = Yup.object().shape({
 
     let id = match.params.id;
 
+    const scrollToBottom = () => {
+        let chatArea = document.getElementById('chatarea');
+        chatArea && chatArea.scrollIntoView(false);
+    }
+
+    const onChatTone = () => {
+        let audioEl = document.getElementById('chatTone');
+        audioEl.load();
+        audioEl.play();
+    }
+
     useEffect(() => {
         //load messages from room
         fetch(`${process.env.REACT_APP_API_ENDPOINT}/room/${id}`)
             .then(res => res.json())
             .then(result => {
                 setMessages(result.messages);
-                setRoom(result)
+                setRoom(result);
+                scrollToBottom();
+
             })
             .catch(error => console.log(error))
 
@@ -55,6 +70,8 @@ const validationSchema = Yup.object().shape({
 
             socket.on('message', message => {
                  setMessages(messages => [ ...messages, {user:message.user, message:message.text} ]);
+                 scrollToBottom();
+                 onChatTone();
             });
 
             socket.on('logout', message => {
@@ -63,6 +80,7 @@ const validationSchema = Yup.object().shape({
                     setRoom(message.room)
                 } 
            });
+
     },[]);
 
     const handleSubmit = (event) => {
@@ -144,6 +162,11 @@ const validationSchema = Yup.object().shape({
            </div> 
            :
             <div className="container-fluid full-height" id="chat">
+                <audio id="chatTone">
+                    <source src={toneUrlOgg} type="audio/ogg"/>
+                    <source src={toneUrlMp3} type="audio/mpeg"/>
+                    Your browser does not support HTML5 video.
+                 </audio>
                <header>
                     <div className="d-flex justify-content-between">
                         <h3>{match.params.name}</h3>
@@ -168,24 +191,24 @@ const validationSchema = Yup.object().shape({
                     </div>
 
                     <div className="col-md-9 p-1">
-                        <div>
-                        {
+                        <div className="mx-md-3">
+                            {
                                 messages !==[] && messages.map((message,index)=>
-                                <div key={index} className={sessionStorage.getItem('name') === message.user ? 'd-flex justify-content-end' : 'd-flex justify-content-start'}>
-                                    <span 
-                                    className={
-                                        sessionStorage.getItem('name') === message.user 
-                                        ? 'msgBox bg-white p-1 mb-2 shadow-sm align-content-center' 
-                                        : 'msgBox bg-white p-1 mb-2 shadow-sm align-content-center'
-                                        } >
-                                    <span className="badge badge-danger">{message.user}</span>
-                                    <p key={index} className="mb-0">{message.message}</p>
-                                    </span> <br></br>
-                                </div>)
-                            }
+                                    <div key={index} className={sessionStorage.getItem('name') === message.user ? 'd-flex justify-content-end' : 'd-flex justify-content-start'}>
+                                        <span 
+                                        className={
+                                            sessionStorage.getItem('name') === message.user 
+                                            ? 'msgBox bg-white p-1 mb-2 shadow-sm align-content-center' 
+                                            : 'msgBox bg-white p-1 mb-2 shadow-sm align-content-center'
+                                            } >
+                                        <span className="badge badge-danger">{message.user}</span>
+                                        <p key={index} className="mb-0 text-break">{message.message}</p>
+                                        </span> <br></br>
+                                    </div>
+                                )
+                                }
                         </div>
-
-                        <div className="d-flex justify-content-center">
+                        <div className="d-flex justify-content-center" id="inputWrapper">
                             <div id="inputContainer">
                                 <Input setMessage={setMessage} sendMessage={sendMessage} message={message}/>
                             </div>
